@@ -6,6 +6,18 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    removeButton = "background-color: green;"
+                   "border-style: solid;"
+                   "border-width: 2px;"
+                   "border-radius: 0px;"
+                   "border-color: red;";
+
+    greenButton = "background-color: green;";
+    redButton = "background-color: red";
+
+    ui->gridLayout->setVerticalSpacing(70);
+    ui->gridLayout->setHorizontalSpacing(70);
 }
 
 MainWindow::~MainWindow()
@@ -14,10 +26,8 @@ MainWindow::~MainWindow()
 }
 
 //Добавление хранилища
-void MainWindow::on_addItem_triggered()
+void MainWindow::addItem(QString name, int x, int y)
 {
-    ui->statusbar->showMessage("Добавить хранилище");
-
     //Отключаем режим удаления
     removeble = false;
     removeAlert(removeble);
@@ -25,17 +35,30 @@ void MainWindow::on_addItem_triggered()
     QDynamicButton *button = new QDynamicButton(this);  // Создаем объект динамической кнопки
     /* Устанавливаем текст с номером этой кнопки
      * */
-    button->setText("Хранилище #" + QString::number(button->getID()));
+    button->setText(name);
+    button->setStyleSheet(greenButton);
+    button->setMinimumSize(120, 120);
+    button->setMaximumSize(120, 120);
     /* Добавляем кнопку в GridLayout
      * */
-    ui->gridLayout->addWidget(button, ui->gridLayout->count() / 3, ui->gridLayout->count() % 3);
+    ui->gridLayout->addWidget(button, y, x);
     /* Подключаем сигнал нажатия кнопки к СЛОТ получения номера кнопки
      * */
     connect(button, SIGNAL(clicked()), this, SLOT(slotGetNumber()));
     connect(button, SIGNAL(clicked()), this, SLOT(removeItem()));
 }
 
-//Получение номера и удаление кнопки при активированном режиме удаления
+void MainWindow::on_addItem_triggered()
+{
+    ui->statusbar->showMessage("Добавить хранилище");
+    Dialog *add = new Dialog();
+    connect(add, SIGNAL(newItemCharacter(QString, int, int)), this, SLOT(addItem(QString, int, int)));
+
+    add->show();
+
+}
+
+//Получение номера кнопки
 void MainWindow::slotGetNumber()
 {
     if(removeble)
@@ -81,10 +104,7 @@ void MainWindow::removeAlert(bool flag)
              * */
             QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->gridLayout->itemAt(i)->widget());
             //Подсветка кнопок красным
-            button->setStyleSheet("border-style: solid;"
-                                  "border-width: 2px;"
-                                  "border-radius: 0px;"
-                                  "border-color: red;");
+            button->setStyleSheet(removeButton);
 
         }
     }
@@ -94,11 +114,12 @@ void MainWindow::removeAlert(bool flag)
 
             QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->gridLayout->itemAt(i)->widget());
             //Возвращение нормального вида кнопок
-            button->setStyleSheet("");
+            button->setStyleSheet(greenButton);
         }
     }
 }
 
+//Получение номера и удаление кнопки при активированном режиме удаления
 void MainWindow::removeItem()
 {
     if(removeble)
