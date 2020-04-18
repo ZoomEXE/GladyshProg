@@ -42,6 +42,12 @@ void MainWindow::addItem(QString name, int x, int y)
     /* Добавляем кнопку в GridLayout
      * */
     ui->gridLayout->addWidget(button, y, x);
+    QPair<QString, QPair<int, int>> temp;
+    temp.second.first = x;
+    temp.second.second = y;
+    temp.first = name;
+    items.push_back(temp);
+    itemsID.push_back(button->getID());
     /* Подключаем сигнал нажатия кнопки к СЛОТ получения номера кнопки
      * */
     connect(button, SIGNAL(clicked()), this, SLOT(slotGetNumber()));
@@ -52,8 +58,14 @@ void MainWindow::on_addItem_triggered()
 {
     ui->statusbar->showMessage("Добавить хранилище");
     Dialog *add = new Dialog();
-    connect(add, SIGNAL(newItemCharacter(QString, int, int)), this, SLOT(addItem(QString, int, int)));
 
+    connect(this, SIGNAL(sendItems(QVector<QPair<QString, QPair<int, int>>>)),
+            add, SLOT(getItems(QVector<QPair<QString, QPair<int, int>>>)));
+
+    connect(add, SIGNAL(newItemCharacter(QString, int, int)),
+            this, SLOT(addItem(QString, int, int)));
+
+    emit sendItems(items);
     add->show();
 
 }
@@ -110,8 +122,8 @@ void MainWindow::removeAlert(bool flag)
     }
     else
     {
-        for(int i = 0; i < ui->gridLayout->count(); i++){
-
+        for(int i = 0; i < ui->gridLayout->count(); i++)
+        {
             QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->gridLayout->itemAt(i)->widget());
             //Возвращение нормального вида кнопок
             button->setStyleSheet(greenButton);
@@ -124,8 +136,18 @@ void MainWindow::removeItem()
 {
     if(removeble)
     {
-    // Определяем объект, который вызвал сигнал
+        // Определяем объект, который вызвал сигнал
         QDynamicButton *button = (QDynamicButton*) sender();
+        // Удаляем элемент
+        for(int i = 0; i < itemsID.size(); ++i)
+        {
+            if(button->getID() == itemsID[i])
+            {
+                items.remove(i);
+                itemsID.remove(i);
+                break;
+            }
+        }
         button->hide();
         delete button;
         if(ui->gridLayout->count() == 0) removeble = false;

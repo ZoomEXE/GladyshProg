@@ -55,3 +55,12 @@ void Dialog::on_buttonBox_accepted()
     }
 
 }
+
+void Dialog::getItems(QVector<QPair<QString, QPair<int, int>>> items)
+{
+    for(auto i = items.begin(); i < items.end(); ++i)
+    {
+        ui->tableWidget->item(i->second.second, i->second.first)->setText(i->first);
+        ui->tableWidget->item(i->second.second, i->second.first)->setBackground(Qt::green);
+    }
+}

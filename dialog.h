@@ -26,6 +26,9 @@ signals:
 private slots:
     void on_tableWidget_cellClicked(int row, int column);
     void on_buttonBox_accepted();
+
+public slots:
+    void getItems(QVector<QPair<QString, QPair<int, int>>> items);
 };
 
 #endif // DIALOG_H

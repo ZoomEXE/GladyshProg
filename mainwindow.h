@@ -15,10 +15,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
     QString greenButton, redButton, removeButton;
+    QVector <QPair<QString, QPair<int, int>>> items;
+    QVector <int> itemsID;
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -37,5 +40,8 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);   //СЛОТ для отлавливания нажатия клавиши Esc
 public slots:
     void addItem(QString name, int x, int y);       //СЛОТ для получения данных о новом элементе
+
+signals:
+    void sendItems(QVector<QPair<QString, QPair<int, int>>> items);
 };
 #endif // MAINWINDOW_H
