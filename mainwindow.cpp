@@ -6,15 +6,17 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    //Стиль удаляемой кнопки
     removeButton = "background-color: green;"
                    "border-style: solid;"
                    "border-width: 2px;"
                    "border-radius: 0px;"
                    "border-color: red;";
 
-    greenButton = "background-color: green;";
-    redButton = "background-color: red";
+    //Стили кнопок в нормальном состоянии, состоянии тревоги и снятом с охраны
+    greenButton = "QDynamicButton {background-color: green}";
+    redButton = "QDynamicButton {background-color: red}";
+
 
     ui->gridLayout->setVerticalSpacing(70);
     ui->gridLayout->setHorizontalSpacing(70);
@@ -29,8 +31,10 @@ MainWindow::~MainWindow()
 void MainWindow::addItem(QString name, int x, int y)
 {
     //Отключаем режим удаления
+    if(removeble)  addLOG("Режим удаления деактивирован.");
     removeble = false;
     removeAlert(removeble);
+
 
     QDynamicButton *button = new QDynamicButton(this);  // Создаем объект динамической кнопки
     /* Устанавливаем текст с номером этой кнопки
@@ -39,6 +43,22 @@ void MainWindow::addItem(QString name, int x, int y)
     button->setStyleSheet(greenButton);
     button->setMinimumSize(120, 120);
     button->setMaximumSize(120, 120);
+    connect(button, SIGNAL(sendLOG(QString)), this, SLOT(addLOG(QString)));
+
+    QMenu *pmenu = new QMenu(button);
+    pmenu->addAction("Снять с охраны", button, SLOT(disarm()));
+    pmenu->addAction("Поставить на охрану", button, SLOT(arm()));
+    QMenu *subMenu = new QMenu("Отмена:", button);
+    subMenu->addAction("Ложное срабатывание", button, SLOT(falseAlarm()));
+    subMenu->addAction("Сбой", button, SLOT(failure()));
+    subMenu->addAction("Пожар", button, SLOT(fire()));
+    subMenu->addAction("Проникновение", button, SLOT(penetration()));
+    pmenu->addMenu(subMenu);
+    pmenu->addAction("Удалить", button, SLOT(removing()));
+    connect(button, SIGNAL(sendRemove()), this, SLOT(removeItem()));
+
+
+    button->setMenu(pmenu);
     /* Добавляем кнопку в GridLayout
      * */
     ui->gridLayout->addWidget(button, y, x);
@@ -48,17 +68,19 @@ void MainWindow::addItem(QString name, int x, int y)
     temp.first = name;
     items.push_back(temp);
     itemsID.push_back(button->getID());
+    addLOG("Добавлено хранилище \"" + name + "\"");
     /* Подключаем сигнал нажатия кнопки к СЛОТ получения номера кнопки
      * */
-    connect(button, SIGNAL(clicked()), this, SLOT(slotGetNumber()));
-    connect(button, SIGNAL(clicked()), this, SLOT(removeItem()));
+    //connect(button, SIGNAL(clicked()), this, SLOT(slotGetNumber()));
+    //connect(button, SIGNAL(clicked()), this, SLOT(removeItem()));
 }
 
+//Открытие диалогового окна для добавления хранилища
 void MainWindow::on_addItem_triggered()
 {
     ui->statusbar->showMessage("Добавить хранилище");
     Dialog *add = new Dialog();
-
+    add->setModal(true);
     connect(this, SIGNAL(sendItems(QVector<QPair<QString, QPair<int, int>>>)),
             add, SLOT(getItems(QVector<QPair<QString, QPair<int, int>>>)));
 
@@ -73,11 +95,11 @@ void MainWindow::on_addItem_triggered()
 //Получение номера кнопки
 void MainWindow::slotGetNumber()
 {
-    if(removeble)
+    /*if(removeble)
     {
     // Определяем объект, который вызвал сигнал
         QDynamicButton *button = (QDynamicButton*) sender();
-    }
+    }*/
 }
 
 //По нажатию клавиши Esc деактивируется режим удаления
@@ -87,6 +109,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         removeble = false;
         removeAlert(removeble); //Функция для оповещения об активации режима удаления
+        addLOG("Режим удаления деактивирован.");
     }
 }
 
@@ -98,11 +121,13 @@ void MainWindow::on_removeItem_triggered()
     {
         removeble = false;
         removeAlert(removeble);
+        addLOG("Режим удаления деактивирован.");
     }
     else
     {
         removeble = true;
         removeAlert(removeble);
+        addLOG("Режим удаления активирован.");
     }
 }
 
@@ -127,6 +152,7 @@ void MainWindow::removeAlert(bool flag)
             QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->gridLayout->itemAt(i)->widget());
             //Возвращение нормального вида кнопок
             button->setStyleSheet(greenButton);
+
         }
     }
 }
@@ -148,8 +174,21 @@ void MainWindow::removeItem()
                 break;
             }
         }
+
+        addLOG("Удалено хранилище \"" + button->text() + "\"");
         button->hide();
-        delete button;
-        if(ui->gridLayout->count() == 0) removeble = false;
+        //delete button;
+        if(items.size() == 0)
+        {
+            removeble = false;
+             addLOG("Режим удаления деактивирован.");
+        }
     }
+}
+
+//Логирование событий
+void MainWindow::addLOG(QString message)
+{
+    QString time = QTime::currentTime().toString() + " ";
+    ui->textBrowser->append(time + message);
 }

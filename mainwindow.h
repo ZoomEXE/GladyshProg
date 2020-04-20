@@ -5,11 +5,13 @@
 #include <QLayout>
 #include <QPushButton>
 #include <QLabel>
-#include "qdynamicbutton.h"
 #include <QKeyEvent>
 #include <QStyle>
+#include <QTime>
+#include <QMenu>
 
-#include <dialog.h>
+#include "dialog.h"
+#include "qdynamicbutton.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,7 +21,7 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    QString greenButton, redButton, removeButton;
+    QString greenButton, redButton, yellowButton, removeButton;
     QVector <QPair<QString, QPair<int, int>>> items;
     QVector <int> itemsID;
 public:
@@ -27,12 +29,14 @@ public:
     ~MainWindow();
     bool removeble = false;
     void removeAlert (bool flag);
+
 private slots:
     void on_addItem_triggered();                    // СЛОТ-обработчик нажатия кнопки добавления
     void slotGetNumber();                           // СЛОТ для получения номера нажатой динамической кнопки
+    void on_removeItem_triggered();                 // СЛОТ для активации режима удаления
+    void removeItem();                              // СЛОТ для удаления элемента
+    void addLOG(QString message);
 
-    void on_removeItem_triggered();                 //СЛОТ для активации режима удаления
-    void removeItem();                              //СЛОТ для удаления элемента
 private:
     Ui::MainWindow *ui;
 
