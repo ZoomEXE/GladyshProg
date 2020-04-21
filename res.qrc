@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/audio">
+        <file>Overspeed Warning.wav</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>load.png</file>
+        <file>add.png</file>
+        <file>save.png</file>
+        <file>remove.png</file>
+        <file>mainIcon.png</file>
+    </qresource>
+</RCC>

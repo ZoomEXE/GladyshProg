@@ -5,6 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    //alertSound = new QSound(":/audio/Overspeed Warning.wav");
     ui->setupUi(this);
     //Стиль удаляемой кнопки
     removeButton = "background-color: green;"
@@ -31,10 +32,9 @@ MainWindow::~MainWindow()
 void MainWindow::addItem(QString name, int x, int y)
 {
     //Отключаем режим удаления
-    if(removeble)  addLOG("Режим удаления деактивирован.");
+    if(removeble) addLOG("Режим удаления деактивирован.");
     removeble = false;
     removeAlert(removeble);
-
 
     QDynamicButton *button = new QDynamicButton(this);  // Создаем объект динамической кнопки
     /* Устанавливаем текст с номером этой кнопки
@@ -45,6 +45,7 @@ void MainWindow::addItem(QString name, int x, int y)
     button->setMaximumSize(120, 120);
     connect(button, SIGNAL(sendLOG(QString)), this, SLOT(addLOG(QString)));
 
+    //Создаем выпадающее меню для кнопки
     QMenu *pmenu = new QMenu(button);
     pmenu->addAction("Снять с охраны", button, SLOT(disarm()));
     pmenu->addAction("Поставить на охрану", button, SLOT(arm()));
@@ -55,10 +56,11 @@ void MainWindow::addItem(QString name, int x, int y)
     subMenu->addAction("Проникновение", button, SLOT(penetration()));
     pmenu->addMenu(subMenu);
     pmenu->addAction("Удалить", button, SLOT(removing()));
+
     connect(button, SIGNAL(sendRemove()), this, SLOT(removeItem()));
-
-
+    connect(this, SIGNAL(sendAlert(int)), button, SLOT(alert(int)));
     button->setMenu(pmenu);
+
     /* Добавляем кнопку в GridLayout
      * */
     ui->gridLayout->addWidget(button, y, x);
@@ -68,11 +70,7 @@ void MainWindow::addItem(QString name, int x, int y)
     temp.first = name;
     items.push_back(temp);
     itemsID.push_back(button->getID());
-    addLOG("Добавлено хранилище \"" + name + "\"");
-    /* Подключаем сигнал нажатия кнопки к СЛОТ получения номера кнопки
-     * */
-    //connect(button, SIGNAL(clicked()), this, SLOT(slotGetNumber()));
-    //connect(button, SIGNAL(clicked()), this, SLOT(removeItem()));
+    addLOG("Добавлено хранилище \"" + name + "\".");
 }
 
 //Открытие диалогового окна для добавления хранилища
@@ -110,6 +108,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         removeble = false;
         removeAlert(removeble); //Функция для оповещения об активации режима удаления
         addLOG("Режим удаления деактивирован.");
+    }
+
+    if(event->key() == Qt::Key_Shift)
+    {
+        sendAlert(itemsID[QTime::currentTime().second() % itemsID.size()]);
     }
 }
 
@@ -175,7 +178,7 @@ void MainWindow::removeItem()
             }
         }
 
-        addLOG("Удалено хранилище \"" + button->text() + "\"");
+        addLOG("Удалено хранилище \"" + button->text() + "\".");
         button->hide();
         //delete button;
         if(items.size() == 0)
@@ -184,6 +187,10 @@ void MainWindow::removeItem()
              addLOG("Режим удаления деактивирован.");
         }
     }
+    else
+    {
+        ui->statusbar->showMessage("Включите режим удаления: Конструктор->Удалить");
+    }
 }
 
 //Логирование событий
@@ -191,4 +198,67 @@ void MainWindow::addLOG(QString message)
 {
     QString time = QTime::currentTime().toString() + " ";
     ui->textBrowser->append(time + message);
+}
+
+//Сохранить конфигурацию
+void MainWindow::on_save_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить конфигурацию"), "",
+        tr("Файлы конфигурации ТСО (*.tso);;"));
+    if(fileName != "")
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::WriteOnly)) {
+                    // error message
+        }
+        else
+        {
+            QTextStream stream(&file);
+            for(int i = 0; i < items.size(); ++i)
+            {
+                stream << items[i].first << " $ " << items[i].second.first << " $ "
+                       << items[i].second.second << " $ " << itemsID[i] << endl;
+            }
+            addLOG("Конфигурация сохранена в файл \"" + fileName + "\".");
+            file.close();
+        }
+    }
+
+}
+
+//Загрузить конфигурацию ТСО
+void MainWindow::on_load_triggered()
+{
+    QVector <QPair <QString, QPair <int, int>>> tempItems;
+    QVector <int> tempItemsID;
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Загрузить конфигурацию"), "",
+        tr("Файлы конфигурации ТСО (*.tso);;"));
+    if(fileName != "")
+    {
+        QFile file(fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+                    // error message
+        }
+        else
+        {
+            QTextStream stream(&file);
+            QStringList load = stream.readAll().split("\n");
+            for(int i = 0; i < load.size() - 1; ++i)
+            {
+                QStringList loadElement = load[i].split(" $ ");
+                QPair <QString, QPair <int, int>> temp;
+                temp.first = loadElement[0];
+                temp.second.first = loadElement[1].toInt();
+                temp.second.second = loadElement[2].toInt();
+                tempItems.push_back(temp);
+                tempItemsID.push_back(loadElement[3].toInt());
+
+                QString name = temp.first;
+                int x = temp.second.first, y = temp.second.second;
+                addItem(name, x, y);
+            }
+            addLOG("Конфигурация загружена из файла \"" + fileName + "\".");
+            file.close();
+        }
+    }
 }

@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Система контроля ТСО</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/icons/mainIcon.png</normaloff>:/icons/mainIcon.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -82,9 +86,9 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action_3"/>
     <addaction name="separator"/>
-    <addaction name="action"/>
+    <addaction name="save"/>
+    <addaction name="load"/>
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
@@ -92,26 +96,44 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="addItem">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/add.png</normaloff>:/icons/add.png</iconset>
+   </property>
    <property name="text">
     <string>Добавить</string>
    </property>
   </action>
   <action name="removeItem">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/remove.png</normaloff>:/icons/remove.png</iconset>
+   </property>
    <property name="text">
     <string>Удалить</string>
    </property>
   </action>
-  <action name="action">
+  <action name="load">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/load.png</normaloff>:/icons/load.png</iconset>
+   </property>
    <property name="text">
     <string>Загрузить</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="save">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+   </property>
    <property name="text">
     <string>Сохранить</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

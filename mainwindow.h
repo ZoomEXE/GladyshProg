@@ -9,6 +9,10 @@
 #include <QStyle>
 #include <QTime>
 #include <QMenu>
+#include <QSound>
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
 
 #include "dialog.h"
 #include "qdynamicbutton.h"
@@ -28,24 +32,31 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     bool removeble = false;
+    //QSound *alertSound;
     void removeAlert (bool flag);
+    void alert(int ID);
 
 private slots:
     void on_addItem_triggered();                    // СЛОТ-обработчик нажатия кнопки добавления
     void slotGetNumber();                           // СЛОТ для получения номера нажатой динамической кнопки
     void on_removeItem_triggered();                 // СЛОТ для активации режима удаления
     void removeItem();                              // СЛОТ для удаления элемента
-    void addLOG(QString message);
+    void addLOG(QString message);                   // СЛОТ для логирования событий
+
+    void on_save_triggered();
+
+    void on_load_triggered();
 
 private:
     Ui::MainWindow *ui;
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *event);   //СЛОТ для отлавливания нажатия клавиши Esc
+    virtual void keyPressEvent(QKeyEvent *event);   // СЛОТ для отлавливания нажатия клавиши Esc
 public slots:
-    void addItem(QString name, int x, int y);       //СЛОТ для получения данных о новом элементе
-
+    void addItem(QString name, int x, int y);       // СЛОТ для получения данных о новом элементе
+    //void stopAlert();                               // СЛОТ для отключения тревоги
 signals:
     void sendItems(QVector<QPair<QString, QPair<int, int>>> items);
+    void sendAlert(int ID);
 };
 #endif // MAINWINDOW_H

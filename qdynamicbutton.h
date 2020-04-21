@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <QMenu>
+#include <QSound>
 
 class QDynamicButton : public QPushButton
 {
@@ -13,6 +14,7 @@ public:
     static int ResID;   // Статическая переменная, счетчик номеров кнопок
     int getID();        // Функция для возврата локального номера кнопки
     QString yellowButton, greenButton, redButton;
+    QSound *alertSound;
 
 public slots:
     // СЛОТЫ для выпадающего меню
@@ -23,11 +25,13 @@ public slots:
     void fire();                                    // СЛОТ для пожара
     void penetration();                             // СЛОТ для проникновения
     void removing();                                // СЛОТ для удаления
+    void alert(int ID);                             // СЛОТ для включения звукового сигнала тревоги
 private:
     int buttonID = 0;   // Локальная переменная, номер кнопки
 signals:
     void sendLOG(QString LOG);
     void sendRemove();
+    void sendStop();
 };
 
 #endif // QDYNAMICBUTTON_H
