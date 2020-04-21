@@ -8,9 +8,16 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
     ui->tableWidget->horizontalHeader()->hide();
     ui->tableWidget->verticalHeader()->hide();
+    ui->tableWidget->setRowCount(7);
+    ui->tableWidget->setColumnCount(7);
     for(int i = 0; i < ui->tableWidget->rowCount(); ++i)
     {
         ui->tableWidget->setRowHeight(i, 100);
+        for(int j = 0; j < ui->tableWidget->columnCount(); ++j)
+        {
+            ui->tableWidget->item(i, j)->setText("");
+            ui->tableWidget->item(i, j)->setTextAlignment(Qt::AlignCenter);
+        }
     }
     for(int i = 0; i < ui->tableWidget->columnCount(); ++i)
     {

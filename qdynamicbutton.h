@@ -15,7 +15,7 @@ public:
     int getID();        // Функция для возврата локального номера кнопки
     QString yellowButton, greenButton, redButton;
     QSound *alertSound;
-
+    bool isArmed = true;
 public slots:
     // СЛОТЫ для выпадающего меню
     void arm();                                     // СЛОТ для постановки на охрану
@@ -26,6 +26,7 @@ public slots:
     void penetration();                             // СЛОТ для проникновения
     void removing();                                // СЛОТ для удаления
     void alert(int ID);                             // СЛОТ для включения звукового сигнала тревоги
+    void fireAlert(int ID);                         // СЛОТ для включения пожарной тревоги
 private:
     int buttonID = 0;   // Локальная переменная, номер кнопки
 signals:

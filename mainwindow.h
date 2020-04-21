@@ -58,5 +58,6 @@ public slots:
 signals:
     void sendItems(QVector<QPair<QString, QPair<int, int>>> items);
     void sendAlert(int ID);
+    void sendFireAlert(int ID);
 };
 #endif // MAINWINDOW_H

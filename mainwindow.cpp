@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     redButton = "QDynamicButton {background-color: red}";
 
 
-    ui->gridLayout->setVerticalSpacing(70);
+    ui->gridLayout->setVerticalSpacing(30);
     ui->gridLayout->setHorizontalSpacing(70);
 }
 
@@ -41,8 +41,8 @@ void MainWindow::addItem(QString name, int x, int y)
      * */
     button->setText(name);
     button->setStyleSheet(greenButton);
-    button->setMinimumSize(120, 120);
-    button->setMaximumSize(120, 120);
+    button->setMinimumSize(120, 50);
+    button->setMaximumSize(120, 50);
     connect(button, SIGNAL(sendLOG(QString)), this, SLOT(addLOG(QString)));
 
     //Создаем выпадающее меню для кнопки
@@ -59,6 +59,7 @@ void MainWindow::addItem(QString name, int x, int y)
 
     connect(button, SIGNAL(sendRemove()), this, SLOT(removeItem()));
     connect(this, SIGNAL(sendAlert(int)), button, SLOT(alert(int)));
+    connect(this, SIGNAL(sendFireAlert(int)), button, SLOT(fireAlert(int)));
     button->setMenu(pmenu);
 
     /* Добавляем кнопку в GridLayout
@@ -113,6 +114,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Shift)
     {
         sendAlert(itemsID[QTime::currentTime().second() % itemsID.size()]);
+    }
+
+    if(event->key() == Qt::Key_Control)
+    {
+        sendFireAlert(itemsID[QTime::currentTime().second() % itemsID.size()]);
     }
 }
 
