@@ -38,6 +38,7 @@ void QDynamicButton::disarm()
     emit sendLOG("Хранилище \"" + button->text() + "\"" + " снято с охраны.");
     alertSound->stop();
     isArmed = false;
+    emit sendStop();
 }
 
 //Постановка на охрану
@@ -48,6 +49,7 @@ void QDynamicButton::arm()
     emit sendLOG("Хранилище \"" + button->text() + "\"" + " поставлено на охрану.");
     alertSound->stop();
     isArmed = true;
+    emit sendStop();
 }
 
 //Ложное срабатывание
@@ -58,6 +60,7 @@ void QDynamicButton::falseAlarm()
     emit sendLOG("В хранилище \"" + button->text() + "\"" + " произошло ложное срабатывание.");
     alertSound->stop();
     isArmed = true;
+    emit sendStop();
 }
 
 //Сбой
@@ -68,6 +71,7 @@ void QDynamicButton::failure()
     emit sendLOG("В хранилище \"" + button->text() + "\"" + " произошел сбой.");
     alertSound->stop();
     isArmed = true;
+    emit sendStop();
 }
 
 //Пожар
@@ -78,6 +82,7 @@ void QDynamicButton::fire()
     emit sendLOG("В хранилище \"" + button->text() + "\"" + " произошел пожар.");
     alertSound->stop();
     isArmed = true;
+    emit sendStop();
 }
 
 //Проникновение
@@ -88,6 +93,7 @@ void QDynamicButton::penetration()
     emit sendLOG("В хранилище \"" + button->text() + "\"" + " произошло проникновение.");
     alertSound->stop();
     isArmed = true;
+    emit sendStop();
 }
 
 //Удаление

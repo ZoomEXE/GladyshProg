@@ -5,7 +5,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    //alertSound = new QSound(":/audio/Overspeed Warning.wav");
     ui->setupUi(this);
     //Стиль удаляемой кнопки
     removeButton = "background-color: green;"
@@ -60,6 +59,9 @@ void MainWindow::addItem(QString name, int x, int y)
     connect(button, SIGNAL(sendRemove()), this, SLOT(removeItem()));
     connect(this, SIGNAL(sendAlert(int)), button, SLOT(alert(int)));
     connect(this, SIGNAL(sendFireAlert(int)), button, SLOT(fireAlert(int)));
+    connect(this, SIGNAL(sendArm()), button, SLOT(arm()));
+    connect(this, SIGNAL(sendDisarm()), button, SLOT(disarm()));
+    connect(button, SIGNAL(sendStop()), this, SLOT(eraseLabel()));
     button->setMenu(pmenu);
 
     /* Добавляем кнопку в GridLayout
@@ -113,19 +115,34 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if(event->key() == Qt::Key_Shift)
     {
-        sendAlert(itemsID[QTime::currentTime().second() % itemsID.size()]);
+        removeble = false;
+        removeAlert(removeble);
+        addLOG("Режим удаления деактивирован.");
+        int ID = QTime::currentTime().second() % itemsID.size();
+        sendAlert(itemsID[ID]);
+        ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала охранная сигнализация!");
     }
 
     if(event->key() == Qt::Key_Control)
     {
-        sendFireAlert(itemsID[QTime::currentTime().second() % itemsID.size()]);
+        removeble = false;
+        removeAlert(removeble);
+        addLOG("Режим удаления деактивирован.");
+        int ID = QTime::currentTime().second() % itemsID.size();
+        sendFireAlert(itemsID[ID]);
+        ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала пожарная сигнализация!");
     }
 }
 
+//Очистка Label
+void MainWindow::eraseLabel()
+{
+    ui->label->clear();
+}
 // Активация/деактивация режима удаления
 void MainWindow::on_removeItem_triggered()
 {
-    ui->statusbar->showMessage("Нажмите на хранилище для его удаления");
+    ui->statusbar->showMessage("Нажмите на хранилище для его удаления / Нажмите Esc для отключения режима удаления");
     if(removeble)
     {
         removeble = false;
@@ -235,6 +252,14 @@ void MainWindow::on_save_triggered()
 //Загрузить конфигурацию ТСО
 void MainWindow::on_load_triggered()
 {
+    for(int i = 0; i < ui->gridLayout->count(); i++)
+    {
+        QDynamicButton *button = qobject_cast<QDynamicButton*>(ui->gridLayout->itemAt(i)->widget());
+        //Возвращение нормального вида кнопок
+        button->hide();
+    }
+    items.clear();
+    itemsID.clear();
     QVector <QPair <QString, QPair <int, int>>> tempItems;
     QVector <int> tempItemsID;
     QString fileName = QFileDialog::getOpenFileName(this, tr("Загрузить конфигурацию"), "",

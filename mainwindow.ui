@@ -10,6 +10,12 @@
     <height>468</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Система контроля ТСО</string>
   </property>
@@ -44,6 +50,26 @@
        </spacer>
       </item>
       <item>
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <pointsize>36</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QTextBrowser" name="textBrowser">
         <property name="maximumSize">
          <size>
@@ -69,6 +95,12 @@
      <height>24</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <widget class="QMenu" name="menu">
     <property name="title">
      <string>Коструктор</string>
@@ -76,11 +108,6 @@
     <addaction name="addItem"/>
     <addaction name="separator"/>
     <addaction name="removeItem"/>
-   </widget>
-   <widget class="QMenu" name="menu_2">
-    <property name="title">
-     <string>Справка</string>
-    </property>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -92,7 +119,6 @@
    </widget>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
-   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="addItem">
@@ -129,6 +155,16 @@
    </property>
    <property name="text">
     <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="allArm">
+   <property name="text">
+    <string>Поставить все на охрану</string>
+   </property>
+  </action>
+  <action name="allDisarm">
+   <property name="text">
+    <string>Снять все с охраны</string>
    </property>
   </action>
  </widget>

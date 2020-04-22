@@ -42,9 +42,8 @@ private slots:
     void on_removeItem_triggered();                 // СЛОТ для активации режима удаления
     void removeItem();                              // СЛОТ для удаления элемента
     void addLOG(QString message);                   // СЛОТ для логирования событий
-
+    void eraseLabel();                              // СЛОТ для очистки текстовой строки
     void on_save_triggered();
-
     void on_load_triggered();
 
 private:
@@ -59,5 +58,7 @@ signals:
     void sendItems(QVector<QPair<QString, QPair<int, int>>> items);
     void sendAlert(int ID);
     void sendFireAlert(int ID);
+    void sendArm();
+    void sendDisarm();
 };
 #endif // MAINWINDOW_H
