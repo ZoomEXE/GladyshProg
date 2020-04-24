@@ -17,17 +17,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     dialog.cpp \
+    dialogi.cpp \
     main.cpp \
     mainwindow.cpp \
     qdynamicbutton.cpp \
 
 HEADERS += \
     dialog.h \
+    dialogi.h \
     mainwindow.h \
     qdynamicbutton.h \
 
 FORMS += \
     dialog.ui \
+    dialogi.ui \
     mainwindow.ui \
 
 # Default rules for deployment.

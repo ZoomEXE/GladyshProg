@@ -30,9 +30,85 @@
    <property name="styleSheet">
     <string notr="true"/>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="horizontalSpacing">
+     <number>0</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>14</number>
+    </property>
+    <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="Line" name="line">
+        <property name="font">
+         <font>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QFrame[frameShape=&quot;4&quot;] 
+{
+    color: red;
+}</string>
+        </property>
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="midLineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="title">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>150</height>
+           </size>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="midLineWidth">
+           <number>1</number>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
       <item>
        <layout class="QGridLayout" name="gridLayout"/>
       </item>
@@ -70,6 +146,35 @@
        </widget>
       </item>
       <item>
+       <widget class="Line" name="line_2">
+        <property name="lineWidth">
+         <number>3</number>
+        </property>
+        <property name="midLineWidth">
+         <number>3</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>10</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <widget class="QTextBrowser" name="textBrowser">
         <property name="maximumSize">
          <size>
@@ -83,6 +188,38 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="0" column="0">
+     <widget class="Line" name="line_3">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
+      <property name="midLineWidth">
+       <number>3</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="Line" name="line_4">
+      <property name="lineWidth">
+       <number>3</number>
+      </property>
+      <property name="midLineWidth">
+       <number>3</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -105,6 +242,8 @@
     <property name="title">
      <string>Коструктор</string>
     </property>
+    <addaction name="rename"/>
+    <addaction name="separator"/>
     <addaction name="addItem"/>
     <addaction name="separator"/>
     <addaction name="removeItem"/>
@@ -165,6 +304,15 @@
   <action name="allDisarm">
    <property name="text">
     <string>Снять все с охраны</string>
+   </property>
+  </action>
+  <action name="rename">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icons/rename.png</normaloff>:/icons/rename.png</iconset>
+   </property>
+   <property name="text">
+    <string>Переименовать склад</string>
    </property>
   </action>
  </widget>

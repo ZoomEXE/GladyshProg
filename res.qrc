@@ -8,5 +8,6 @@
         <file>save.png</file>
         <file>remove.png</file>
         <file>mainIcon.png</file>
+        <file>rename.png</file>
     </qresource>
 </RCC>

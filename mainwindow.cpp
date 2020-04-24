@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->gridLayout->setVerticalSpacing(30);
     ui->gridLayout->setHorizontalSpacing(70);
+    //QLabel *title = new QLabel("asdasd");
+    //ui->gridLayout->addWidget(title, 0, 0);
 }
 
 MainWindow::~MainWindow()
@@ -115,22 +117,28 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
     if(event->key() == Qt::Key_Shift)
     {
-        removeble = false;
-        removeAlert(removeble);
-        addLOG("Режим удаления деактивирован.");
-        int ID = QTime::currentTime().second() % itemsID.size();
-        sendAlert(itemsID[ID]);
-        ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала охранная сигнализация!");
+        if(!items.empty())
+        {
+            removeble = false;
+            removeAlert(removeble);
+            addLOG("Режим удаления деактивирован.");
+            int ID = QTime::currentTime().second() % itemsID.size();
+            sendAlert(itemsID[ID]);
+            ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала охранная сигнализация!");
+        }
     }
 
     if(event->key() == Qt::Key_Control)
     {
-        removeble = false;
-        removeAlert(removeble);
-        addLOG("Режим удаления деактивирован.");
-        int ID = QTime::currentTime().second() % itemsID.size();
-        sendFireAlert(itemsID[ID]);
-        ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала пожарная сигнализация!");
+        if(!items.empty())
+        {
+            removeble = false;
+            removeAlert(removeble);
+            addLOG("Режим удаления деактивирован.");
+            int ID = QTime::currentTime().second() % itemsID.size();
+            sendFireAlert(itemsID[ID]);
+            ui->label->setText("В хранилище \"" + items[ID].first + "\" сработала пожарная сигнализация!");
+        }
     }
 }
 
@@ -237,6 +245,7 @@ void MainWindow::on_save_triggered()
         else
         {
             QTextStream stream(&file);
+            stream << ui->title->text() << endl;
             for(int i = 0; i < items.size(); ++i)
             {
                 stream << items[i].first << " $ " << items[i].second.first << " $ "
@@ -274,7 +283,8 @@ void MainWindow::on_load_triggered()
         {
             QTextStream stream(&file);
             QStringList load = stream.readAll().split("\n");
-            for(int i = 0; i < load.size() - 1; ++i)
+            ui->title->setText(load[0]);
+            for(int i = 1; i < load.size() - 1; ++i)
             {
                 QStringList loadElement = load[i].split(" $ ");
                 QPair <QString, QPair <int, int>> temp;
@@ -292,4 +302,17 @@ void MainWindow::on_load_triggered()
             file.close();
         }
     }
+}
+
+void MainWindow::on_rename_triggered()
+{
+    Dialogi *rename = new Dialogi();
+    rename->setModal(true);
+    rename->show();
+    connect(rename, SIGNAL(sendName(QString)), this, SLOT(rename(QString)));
+}
+
+void MainWindow::rename(QString name)
+{
+    ui->title->setText(name);
 }

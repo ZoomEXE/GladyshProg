@@ -16,6 +16,7 @@
 
 #include "dialog.h"
 #include "qdynamicbutton.h"
+#include "dialogi.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -46,6 +47,8 @@ private slots:
     void on_save_triggered();
     void on_load_triggered();
 
+    void on_rename_triggered();
+
 private:
     Ui::MainWindow *ui;
 
@@ -53,7 +56,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);   // СЛОТ для отлавливания нажатия клавиши Esc
 public slots:
     void addItem(QString name, int x, int y);       // СЛОТ для получения данных о новом элементе
-    //void stopAlert();                               // СЛОТ для отключения тревоги
+    void rename(QString name);                      // СЛОТ для переименования таблички
 signals:
     void sendItems(QVector<QPair<QString, QPair<int, int>>> items);
     void sendAlert(int ID);
